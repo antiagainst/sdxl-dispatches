@@ -9,12 +9,12 @@ hal.executable public @main$async_dispatch_3 {
       func.func @main$async_dispatch_3_generic_128x12_f16xf32xf32xf32() {
         %c0 = arith.constant 0 : index
         %c16960 = arith.constant 16960 : index
-        %c6400 = arith.constant 6400 : index
-        %c12544 = arith.constant 12544 : index
+        %c268544 = arith.constant 268544 : index
+        %c274688 = arith.constant 274688 : index
         %0 = hal.interface.binding.subspan set(0) binding(0) type(storage_buffer) alignment(64) offset(%c0) flags(ReadOnly) : !flow.dispatch.tensor<readonly:tensor<12xf16>>
         %1 = hal.interface.binding.subspan set(0) binding(1) type(storage_buffer) alignment(64) offset(%c16960) flags(ReadOnly) : !flow.dispatch.tensor<readonly:tensor<128xf32>>
-        %2 = hal.interface.binding.subspan set(0) binding(2) type(storage_buffer) alignment(64) offset(%c6400) : !flow.dispatch.tensor<writeonly:tensor<12x128xf32>>
-        %3 = hal.interface.binding.subspan set(0) binding(3) type(storage_buffer) alignment(64) offset(%c12544) : !flow.dispatch.tensor<writeonly:tensor<128x12xf32>>
+        %2 = hal.interface.binding.subspan set(0) binding(2) type(storage_buffer) alignment(64) offset(%c268544) : !flow.dispatch.tensor<writeonly:tensor<12x128xf32>>
+        %3 = hal.interface.binding.subspan set(0) binding(3) type(storage_buffer) alignment(64) offset(%c274688) : !flow.dispatch.tensor<writeonly:tensor<128x12xf32>>
         %4 = flow.dispatch.tensor.load %0, offsets = [0], sizes = [12], strides = [1] : !flow.dispatch.tensor<readonly:tensor<12xf16>> -> tensor<12xf16>
         %5 = flow.dispatch.tensor.load %1, offsets = [0], sizes = [128], strides = [1] : !flow.dispatch.tensor<readonly:tensor<128xf32>> -> tensor<128xf32>
         %6 = tensor.empty() : tensor<12x128xf32>

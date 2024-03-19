@@ -8,16 +8,16 @@ hal.executable public @main$async_dispatch_11 {
     builtin.module {
       func.func @main$async_dispatch_11_transpose_2x128x128x4_f16() {
         %c0 = arith.constant 0 : index
-        %c21760 = arith.constant 21760 : index
+        %c283904 = arith.constant 283904 : index
         %0 = hal.interface.binding.subspan set(0) binding(0) type(storage_buffer) alignment(64) offset(%c0) flags(ReadOnly) : !flow.dispatch.tensor<readonly:tensor<2x4x128x128xf16>>
-        %1 = hal.interface.binding.subspan set(0) binding(1) type(storage_buffer) alignment(64) offset(%c21760) : !flow.dispatch.tensor<readwrite:tensor<2x130x130x4xf16>>
+        %1 = hal.interface.binding.subspan set(0) binding(1) type(storage_buffer) alignment(64) offset(%c283904) : !flow.dispatch.tensor<readwrite:tensor<2x130x130x16xf16>>
         %2 = flow.dispatch.tensor.load %0, offsets = [0, 0, 0, 0], sizes = [2, 4, 128, 128], strides = [1, 1, 1, 1] : !flow.dispatch.tensor<readonly:tensor<2x4x128x128xf16>> -> tensor<2x4x128x128xf16>
         %3 = tensor.empty() : tensor<2x128x128x4xf16>
         %4 = linalg.generic {indexing_maps = [affine_map<(d0, d1, d2, d3) -> (d0, d3, d1, d2)>, affine_map<(d0, d1, d2, d3) -> (d0, d1, d2, d3)>], iterator_types = ["parallel", "parallel", "parallel", "parallel"]} ins(%2 : tensor<2x4x128x128xf16>) outs(%3 : tensor<2x128x128x4xf16>) attrs =  {lowering_config = #iree_codegen.lowering_config<tile_sizes = [[1, 1, 32, 0]]>} {
         ^bb0(%in: f16, %out: f16):
           linalg.yield %in : f16
         } -> tensor<2x128x128x4xf16>
-        flow.dispatch.tensor.store %4, %1, offsets = [0, 1, 1, 0], sizes = [2, 128, 128, 4], strides = [1, 1, 1, 1] : tensor<2x128x128x4xf16> -> !flow.dispatch.tensor<readwrite:tensor<2x130x130x4xf16>>
+        flow.dispatch.tensor.store %4, %1, offsets = [0, 1, 1, 0], sizes = [2, 128, 128, 4], strides = [1, 1, 1, 1] : tensor<2x128x128x4xf16> -> !flow.dispatch.tensor<readwrite:tensor<2x130x130x16xf16>>
         return
       }
     }

@@ -1,36 +1,29 @@
 hal.executable public @main$async_dispatch_144 {
   hal.executable.variant public @rocm_hsaco_fb target(<"rocm", "rocm-hsaco-fb", {mma_intrinsics = [#iree_gpu.mfma_layout<F16_16x16x16_F32>, #iree_gpu.mfma_layout<F16_32x32x8_F32>], target_arch = "gfx942", ukernels = "none"}>) {
-    hal.executable.export public @main$async_dispatch_144_broadcast_2048x1280_f32xf32xf16xf16 ordinal(0) layout(#hal.pipeline.layout<push_constants = 4, sets = [<0, bindings = [<0, storage_buffer, ReadOnly>, <1, storage_buffer, ReadOnly>, <2, storage_buffer>]>]>) attributes {hal.interface.bindings = [#hal.interface.binding<0, 0>, #hal.interface.binding<0, 1>, #hal.interface.binding<0, 2>], subgroup_size = 64 : index, translation_info = #iree_codegen.translation_info<LLVMGPUVectorize>, workgroup_size = [128 : index, 1 : index, 1 : index]} {
+    hal.executable.export public @main$async_dispatch_144_attention_40x1024x64xf16 ordinal(0) layout(#hal.pipeline.layout<push_constants = 2, sets = [<0, bindings = [<0, storage_buffer, ReadOnly>, <1, storage_buffer>]>]>) attributes {hal.interface.bindings = [#hal.interface.binding<0, 0>, #hal.interface.binding<0, 1>], translation_info = #iree_codegen.translation_info<TransformDialectCodegen codegen_spec = @__attention_main, {"amdgpu-waves-per-eu" = 2 : i64}>} {
     ^bb0(%arg0: !hal.device):
       %x, %y, %z = flow.dispatch.workgroup_count_from_slice 
       hal.return %x, %y, %z : index, index, index
     }
     builtin.module {
-      func.func @main$async_dispatch_144_broadcast_2048x1280_f32xf32xf16xf16() {
+      func.func @main$async_dispatch_144_attention_40x1024x64xf16() {
+        %cst = arith.constant 1.250000e-01 : f16
+        %c601344 = arith.constant 601344 : index
+        %c273664 = arith.constant 273664 : index
         %0 = hal.interface.constant.load[0] : i32
         %1 = hal.interface.constant.load[1] : i32
-        %2 = hal.interface.constant.load[2] : i32
-        %3 = hal.interface.constant.load[3] : i32
-        %4 = arith.index_castui %0 : i32 to index
-        %5 = arith.index_castui %1 : i32 to index
-        %6 = arith.index_castui %2 : i32 to index
-        %7 = arith.index_castui %3 : i32 to index
-        %8 = hal.interface.binding.subspan set(0) binding(0) type(storage_buffer) alignment(64) offset(%4) flags(ReadOnly) : !flow.dispatch.tensor<readonly:tensor<2048x1280xf32>>
-        %9 = hal.interface.binding.subspan set(0) binding(1) type(storage_buffer) alignment(64) offset(%6) flags(ReadOnly) : !flow.dispatch.tensor<readonly:tensor<1280xf32>>
-        %10 = hal.interface.binding.subspan set(0) binding(0) type(storage_buffer) alignment(64) offset(%5) flags(ReadOnly) : !flow.dispatch.tensor<readonly:tensor<2048x1280xf16>>
-        %11 = hal.interface.binding.subspan set(0) binding(2) type(storage_buffer) alignment(64) offset(%7) : !flow.dispatch.tensor<writeonly:tensor<2048x1280xf16>>
-        %12 = flow.dispatch.tensor.load %8, offsets = [0, 0], sizes = [2048, 1280], strides = [1, 1] : !flow.dispatch.tensor<readonly:tensor<2048x1280xf32>> -> tensor<2048x1280xf32>
-        %13 = flow.dispatch.tensor.load %9, offsets = [0], sizes = [1280], strides = [1] : !flow.dispatch.tensor<readonly:tensor<1280xf32>> -> tensor<1280xf32>
-        %14 = flow.dispatch.tensor.load %10, offsets = [0, 0], sizes = [2048, 1280], strides = [1, 1] : !flow.dispatch.tensor<readonly:tensor<2048x1280xf16>> -> tensor<2048x1280xf16>
-        %15 = tensor.empty() : tensor<2048x1280xf16>
-        %16 = linalg.generic {indexing_maps = [affine_map<(d0, d1) -> (d0, d1)>, affine_map<(d0, d1) -> (d1)>, affine_map<(d0, d1) -> (d0, d1)>, affine_map<(d0, d1) -> (d0, d1)>], iterator_types = ["parallel", "parallel"]} ins(%12, %13, %14 : tensor<2048x1280xf32>, tensor<1280xf32>, tensor<2048x1280xf16>) outs(%15 : tensor<2048x1280xf16>) attrs =  {lowering_config = #iree_codegen.lowering_config<tile_sizes = [[1, 256]]>} {
-        ^bb0(%in: f32, %in_0: f32, %in_1: f16, %out: f16):
-          %17 = arith.addf %in, %in_0 : f32
-          %18 = arith.truncf %17 : f32 to f16
-          %19 = arith.addf %18, %in_1 : f16
-          linalg.yield %19 : f16
-        } -> tensor<2048x1280xf16>
-        flow.dispatch.tensor.store %16, %11, offsets = [0, 0], sizes = [2048, 1280], strides = [1, 1] : tensor<2048x1280xf16> -> !flow.dispatch.tensor<writeonly:tensor<2048x1280xf16>>
+        %2 = arith.index_castui %0 : i32 to index
+        %3 = arith.index_castui %1 : i32 to index
+        %4 = hal.interface.binding.subspan set(0) binding(0) type(storage_buffer) alignment(64) offset(%2) flags(ReadOnly) : !flow.dispatch.tensor<readonly:tensor<40x1024x64xf16>>
+        %5 = hal.interface.binding.subspan set(0) binding(0) type(storage_buffer) alignment(64) offset(%c601344) flags(ReadOnly) : !flow.dispatch.tensor<readonly:tensor<40x64x64xf16>>
+        %6 = hal.interface.binding.subspan set(0) binding(0) type(storage_buffer) alignment(64) offset(%c273664) flags(ReadOnly) : !flow.dispatch.tensor<readonly:tensor<40x64x64xf16>>
+        %7 = hal.interface.binding.subspan set(0) binding(1) type(storage_buffer) alignment(64) offset(%3) : !flow.dispatch.tensor<writeonly:tensor<40x1024x64xf16>>
+        %8 = flow.dispatch.tensor.load %4, offsets = [0, 0, 0], sizes = [40, 1024, 64], strides = [1, 1, 1] : !flow.dispatch.tensor<readonly:tensor<40x1024x64xf16>> -> tensor<40x1024x64xf16>
+        %9 = flow.dispatch.tensor.load %5, offsets = [0, 0, 0], sizes = [40, 64, 64], strides = [1, 1, 1] : !flow.dispatch.tensor<readonly:tensor<40x64x64xf16>> -> tensor<40x64x64xf16>
+        %10 = flow.dispatch.tensor.load %6, offsets = [0, 0, 0], sizes = [40, 64, 64], strides = [1, 1, 1] : !flow.dispatch.tensor<readonly:tensor<40x64x64xf16>> -> tensor<40x64x64xf16>
+        %11 = tensor.empty() : tensor<40x1024x64xf16>
+        %12 = iree_linalg_ext.attention ins(%8, %9, %10, %cst : tensor<40x1024x64xf16>, tensor<40x64x64xf16>, tensor<40x64x64xf16>, f16) outs(%11 : tensor<40x1024x64xf16>) -> tensor<40x1024x64xf16>
+        flow.dispatch.tensor.store %12, %7, offsets = [0, 0, 0], sizes = [40, 1024, 64], strides = [1, 1, 1] : tensor<40x1024x64xf16> -> !flow.dispatch.tensor<writeonly:tensor<40x1024x64xf16>>
         return
       }
     }

@@ -7,7 +7,7 @@ hal.executable public @main$async_dispatch_132 {
     }
     builtin.module {
       func.func @main$async_dispatch_132_generic_2x32x40x1024_f16xf32xf32xf32() {
-        %cst = arith.constant 9.99999974E-6 : f32
+        %cst = arith.constant 9.99999997E-7 : f32
         %cst_0 = arith.constant 4.096000e+04 : f32
         %cst_1 = arith.constant 0.000000e+00 : f32
         %0 = hal.interface.constant.load[0] : i32
